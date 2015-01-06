@@ -54,6 +54,22 @@ Return all properties except `params` for the document
 console.log(bob.except('ssn')); // {name: 'Bob', email: 'bob@example.com'}
 ```
 
+### #assign(data, [override])
+
+Filter and apply changes to the document
+
+```js
+bob.assign({
+  name: 'Bob Perry',
+  ssn: '000-00-0000'
+});
+console.log(bob); // {name: 'Bob', email: 'bob@example.com', ssn: '123-45-6789'}
+```
+
+### #merge(data, [override])
+
+Same as `#assign` but returns a copy of the document that the changes were made to
+
 ### #safeUpdate(data, [override], [done])
 
 Update the document using only [permitted] properties. Use `override` to set properties not in [permitted].

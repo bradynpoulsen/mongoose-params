@@ -50,6 +50,32 @@ module.exports = (function(schema, opts){
     },
 
     /**
+     * Filter assign to document
+     *
+     * @param source      {Object}  Source object
+     * @param [override]  {Object}  Overrides to apply after filtering
+     *
+     * @returns {this}
+     */
+    assign: function(source, override){
+      var filtered = params(source, override);
+      return _.assign(this, filtered);
+    },
+
+    /**
+     * Filter assign to a copy of the document
+     *
+     * @param source      {Object}  Source object
+     * @param [override]  {Object}  Overrides to apply after filtering
+     *
+     * @returns {Document<this>} Copy of the document properties were assigned to
+     */
+    merge: function(source, override){
+      var filtered = params(source, override);
+      return _.merge(this, filtered);
+    },
+
+    /**
      * Perform an update with permitted params
      *
      * @param source      {Object}    Source object
@@ -59,9 +85,7 @@ module.exports = (function(schema, opts){
      * @returns {Promise} The promise returned by Model.save
      */
     safeUpdate: function(source, override, done){
-      var filtered = params(source, override);
-      _.assign(this, filtered);
-      return this.save(_.isFunction(override) ? override : done);
+      return this.assign(source, override).save(_.isFunction(override) ? override : done);
     }
   });
 
