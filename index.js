@@ -8,14 +8,13 @@ module.exports = (function(schema, opts){
   ///////////////////
 
   /** Merge Default Options **/
-  var options = _.merge({
+  var options = {
     permitted: [],
     overrideMethods: false
-  }, opts);
-
-  /** Reset Permitted Properties **/
-  if(!_.isArray(options.permitted) && !_.isString(options.permitted))
-    options.permitted = [];
+  };
+  if(opts) _.assign(options, opts);
+  if(_.isString(options.permitted) && options.permitted.indexOf(' ') >= 0)
+    options.permitted = options.permitted.split(' ');
 
   ////////////////////
   // Helper Methods //
@@ -42,11 +41,11 @@ module.exports = (function(schema, opts){
   _.assign(schema.methods, {
     only: function(params){
       if(arguments.length > 1) params = arguments;
-      return _.pick(this, params);
+      return _.pick(this.toObject(), params);
     },
     except: function(params){
       if(arguments.length > 1) params = arguments;
-      return _.omit(this, params);
+      return _.omit(this.toObject(), params);
     },
 
     /**

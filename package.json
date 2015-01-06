@@ -1,6 +1,6 @@
 {
   "name": "mongoose-params",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "implement rails-like strong parameters in mongoose",
   "main": "index.js",
   "scripts": {
