@@ -23,5 +23,8 @@
   "homepage": "https://github.com/bradynpoulsen/mongoose-params",
   "dependencies": {
     "lodash": "^2.4.1"
+  },
+  "peerDependencies": {
+    "mongoose": "^3.8.21"
   }
 }
