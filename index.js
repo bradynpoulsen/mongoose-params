@@ -117,7 +117,10 @@ module.exports = (function(schema, opts){
       var filtered = _.map(docs, function(source){
         return params(source, override);
       });
-      return this.create(filtered, _.isFunction(override) ? override : done);
+      /** use `new` instead of `create` to allow for overriding **/
+      var created = new this(filtered);
+      if(_.isFunction(override) || _.isFunction(done)) return created.save(_.isFunction(override) ? override : done);
+      else return created;
     }
   });
 
