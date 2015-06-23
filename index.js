@@ -110,17 +110,28 @@ module.exports = (function(schema, opts){
      * @param [override]  {Object}        Overrides to apply after filtering
      * @param [done]      {Function}      Model.create callback
      *
-     * @returns {Promise} Model.create promise
+     * @returns {Promise} Promise returned by Model.save 
      */
     safeCreate: function(docs, override, done){
       if(!_.isArray(docs)) docs = [docs];
-      var filtered = _.map(docs, function(source){
+      // 1) Produce filtered object based on 'permitted' properties
+      // 2) Create a document with strict mode set to false 
+      //    (to enable overrides)
+      // 3) Save document, generating a promise
+      // 4) Return a single promise with either a single potential value
+      //    or an array of potential values, based on the type of parameter
+      //    passed in
+      var promises = _.map(docs, function(source){
         return params(source, override);
-      });
-      /** use `new` instead of `create` to allow for overriding **/
-      var created = new this(filtered);
-      if(_.isFunction(override) || _.isFunction(done)) return created.save(_.isFunction(override) ? override : done);
-      else return created;
+      }).map(function(filtered) {
+        return new this(filtered, false);
+      }, this).map(function(doc) {
+        var fn = _.isFunction(override) ? override : done;
+        if (_.isFunction(fn)) return doc.save(done);
+        else return doc.save();
+      }, this);
+      if (promises.length === 1) return promises[0];
+      else return Promise.all(promises);
     }
   });
 
