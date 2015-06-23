@@ -127,7 +127,7 @@ module.exports = (function(schema, opts){
         return new this(filtered, false);
       }, this).map(function(doc) {
         var fn = _.isFunction(override) ? override : done;
-        if (_.isFunction(fn)) return doc.save(done);
+        if (_.isFunction(fn)) return doc.save(fn);
         else return doc.save();
       }, this);
       if (promises.length === 1) return promises[0];
